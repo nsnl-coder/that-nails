@@ -3,6 +3,7 @@ import cors from 'cors';
 import express from 'express';
 import { CLIENT_HOST } from './env.config';
 import indexRouter from '../routers/index.router';
+import globalErrorHandler from '../middlewares/globalErrorHandler.middleware';
 
 const app = express();
 
@@ -15,7 +16,9 @@ app.use(
 
 app.use(express.json());
 app.use(cookieParser());
+
 app.use(indexRouter);
+app.use(globalErrorHandler);
 app.use('{*splat}', (req, res) => {
   res.status(404).send('Endpoint with provided method does not exist');
 });

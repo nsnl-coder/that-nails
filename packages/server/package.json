@@ -13,9 +13,14 @@
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
+    "@types/pg": "^8.15.6",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "kysely": "^0.28.8",
+    "pg": "^8.16.3",
+    "zod": "^4.1.12",
+    "@thatnails/shared": "1.0.0"
   }
 }

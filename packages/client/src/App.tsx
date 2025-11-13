@@ -1,5 +1,12 @@
+import { Routes, Route } from 'react-router';
+import CheckinPage from './pages/CheckinPage';
+
 const App = () => {
-  return <div className='text-3xl font-bold underline'>App</div>;
+  return (
+    <Routes>
+      <Route path='/' element={<CheckinPage />} />
+    </Routes>
+  );
 };
 
 export default App;
