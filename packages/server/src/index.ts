@@ -1,4 +1,5 @@
 import { APP_PORT } from './config/env.config';
+import './config/express.config';
 import './config/migrator.config';
 import server from './config/server.config';
 import { initializeSocket } from './config/socket.config';

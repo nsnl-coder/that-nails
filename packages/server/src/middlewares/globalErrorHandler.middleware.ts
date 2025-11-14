@@ -10,8 +10,6 @@ const globalErrorHandler = (
   let message = error.message || 'Unexpected error happened';
   let statusCode = 400;
 
-  console.log(error);
-
   // invalid jsonwebtoken
   if (
     error.message === 'jwt malformed' ||

@@ -1,4 +1,4 @@
-import { SOCKET_EVENT, validationSchema } from '@thatnails/shared';
+import { SOCKET_EVENT, USER_ROLE, validationSchema } from '@thatnails/shared';
 import { Request, Response } from 'express';
 import db from '../config/db.config';
 import getIo from '../config/socket.config';
@@ -27,7 +27,12 @@ const createCheckin = async (req: Request, res: Response) => {
     // create user for first visit
     await db
       .insertInto('users')
-      .values({ phone, full_name, created_at: new Date() })
+      .values({
+        phone,
+        full_name,
+        created_at: new Date(),
+        role: USER_ROLE.CUSTOMER,
+      })
       .returningAll()
       .executeTakeFirst();
   }
