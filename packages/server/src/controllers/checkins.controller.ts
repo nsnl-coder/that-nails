@@ -1,7 +1,7 @@
 import { SOCKET_EVENT, validationSchema } from '@thatnails/shared';
 import { Request, Response } from 'express';
 import db from '../config/db.config';
-import getIO from '../utils/getIo.util';
+import getIo from '../config/socket.config';
 
 const createCheckin = async (req: Request, res: Response) => {
   const { phone, full_name } =
@@ -39,8 +39,7 @@ const createCheckin = async (req: Request, res: Response) => {
     .returningAll()
     .executeTakeFirst();
 
-  const io = getIO();
-  io.emit(SOCKET_EVENT.CHECKIN_CREATED);
+  getIo().emit(SOCKET_EVENT.CHECKIN_CREATED);
 
   res.status(200).json({
     status: 'success',

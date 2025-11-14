@@ -13,7 +13,7 @@ export default function CheckinSuccess(props: Props): React.JSX.Element {
     setTimeout(() => {
       setHasUser(undefined);
       reset();
-    }, 5000);
+    }, 3000);
   }, []);
 
   return <div>CheckinSuccess</div>;
