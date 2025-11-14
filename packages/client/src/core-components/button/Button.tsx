@@ -1,10 +1,11 @@
-import type { PropsWithChildren } from 'react';
+import type { ButtonHTMLAttributes } from 'react';
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
-export default function Button({
-  children,
-}: PropsWithChildren): React.JSX.Element {
+export default function Button(props: ButtonProps): React.JSX.Element {
+  const { children, ...rest } = props;
+
   return (
-    <button className='bg-blue-500 text-white p-2 rounded-md'>
+    <button {...rest} className="bg-blue-400 text-white p-2 rounded-md">
       {children}
     </button>
   );

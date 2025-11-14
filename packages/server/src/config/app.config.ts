@@ -1,9 +1,9 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
-import { CLIENT_HOST } from './env.config';
-import indexRouter from '../routers/index.router';
 import globalErrorHandler from '../middlewares/globalErrorHandler.middleware';
+import indexRouter from '../routers/index.router';
+import { CLIENT_HOST } from './env.config';
 
 const app = express();
 
