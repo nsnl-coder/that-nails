@@ -1,19 +1,24 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { checkinApi } from './checkins.api';
+import { authApi } from './auth.api';
 import { categoryApi } from './categories.api';
+import { checkinApi } from './checkins.api';
 import { serviceApi } from './services.api';
+import { userSliceReducer } from './user.slice';
 
 export const store = configureStore({
   reducer: {
+    currrentUser: userSliceReducer,
     [checkinApi.reducerPath]: checkinApi.reducer,
     [categoryApi.reducerPath]: categoryApi.reducer,
     [serviceApi.reducerPath]: serviceApi.reducer,
+    [authApi.reducerPath]: authApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(checkinApi.middleware)
       .concat(categoryApi.middleware)
-      .concat(serviceApi.middleware),
+      .concat(serviceApi.middleware)
+      .concat(authApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

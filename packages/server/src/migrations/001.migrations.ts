@@ -1,7 +1,55 @@
-import { USER_ROLE } from '@thatnails/shared';
 import { Kysely, sql } from 'kysely';
 
 export async function up(db: Kysely<any>): Promise<void> {
+  await db.schema
+    .createTable('users')
+    .addColumn('id', 'serial', (c) => c.primaryKey())
+    .addColumn('full_name', 'text', (c) => c.notNull())
+    .addColumn('email', 'text', (c) => c.unique())
+    .addColumn('phone', 'text', (c) => c.notNull().unique())
+    .addColumn('password', 'text', (c) => c.notNull())
+    .addColumn('is_phone_verified', 'boolean', (c) =>
+      c.notNull().defaultTo(false),
+    )
+    .addColumn('is_email_verified', 'boolean', (c) =>
+      c.notNull().defaultTo(false),
+    )
+    .addColumn('created_at', 'timestamp', (c) =>
+      c.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
+    )
+    .execute();
+
+  await db.schema
+    .createTable('salons')
+    .addColumn('id', 'serial', (c) => c.primaryKey())
+    .addColumn('name', 'text', (c) => c.notNull())
+    .addColumn('address', 'text', (c) => c.notNull())
+    .addColumn('phone', 'text', (c) => c.notNull())
+    .addColumn('email', 'text', (c) => c.notNull())
+    .addColumn('created_at', 'timestamp', (c) =>
+      c.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
+    )
+    .execute();
+
+  await db.schema
+    .createTable('salon_users')
+    .addColumn('salon_id', 'integer', (c) =>
+      c.notNull().references('salons.id'),
+    )
+    .addColumn('user_id', 'integer', (c) => c.notNull().references('users.id'))
+    .addColumn('role', 'text', (c) => c.notNull())
+    .addColumn('created_at', 'timestamp', (c) =>
+      c.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
+    )
+    .execute();
+
+  await db.schema
+    .createTable('root_users')
+    .addColumn('user_id', 'integer', (c) =>
+      c.notNull().references('users.id').primaryKey(),
+    )
+    .execute();
+
   await db.schema
     .createTable('checkins')
     .addColumn('id', 'serial', (c) => c.primaryKey())
@@ -9,18 +57,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('created_at', 'timestamp', (c) =>
       c.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
     )
-    .execute();
-
-  await db.schema
-    .createTable('users')
-    .addColumn('id', 'serial', (c) => c.primaryKey())
-    .addColumn('full_name', 'text', (c) => c.notNull())
-    .addColumn('email', 'text', (c) => c.unique())
-    .addColumn('phone', 'text', (c) => c.notNull().unique())
-    .addColumn('created_at', 'timestamp', (c) =>
-      c.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
-    )
-    .addColumn('role', 'text', (c) => c.notNull().defaultTo(USER_ROLE.CUSTOMER))
     .execute();
 
   await db.schema

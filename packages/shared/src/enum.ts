@@ -3,10 +3,10 @@ export enum SOCKET_EVENT {
 }
 
 export enum USER_ROLE {
-  ADMIN = 'admin',
-  MANAGER = 'manager',
-  EMPLOYEE = 'employee',
+  ROOT = 'root',
   CUSTOMER = 'customer',
+  OWNER = 'owner',
+  EMPLOYEE = 'employee',
 }
 
 export enum APPOINTMENT_STATUS {
@@ -14,4 +14,9 @@ export enum APPOINTMENT_STATUS {
   COMPLETED = 'completed',
   NO_SHOW = 'no_show',
   CANCELLED = 'cancelled',
+}
+
+export enum JWT_TOKEN {
+  AUTH = 'auth-token',
+  RESET_PASSWORD = 'forgot-password-token',
 }

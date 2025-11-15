@@ -1,6 +1,6 @@
-import { USER_ROLE, validationSchema } from '@thatnails/shared';
-import db from '../config/db.config';
+import { validationSchema } from '@thatnails/shared';
 import { Request, Response } from 'express';
+import db from '../config/db.config';
 
 const createEmployee = async (req: Request, res: Response) => {
   const { full_name, email, phone } =
@@ -8,7 +8,7 @@ const createEmployee = async (req: Request, res: Response) => {
 
   const user = await db
     .insertInto('users')
-    .values({ full_name, email, phone, role: USER_ROLE.EMPLOYEE })
+    .values({ full_name, email, phone })
     .returningAll()
     .executeTakeFirst();
 
@@ -19,11 +19,7 @@ const createEmployee = async (req: Request, res: Response) => {
 };
 
 const getEmployees = async (req: Request, res: Response) => {
-  const employees = await db
-    .selectFrom('users')
-    .selectAll()
-    .where('role', '=', USER_ROLE.EMPLOYEE)
-    .execute();
+  const employees = await db.selectFrom('users').selectAll().execute();
 
   res.status(200).json({
     status: 'success',

@@ -19,3 +19,5 @@ const readEnv = (key: string): string => {
 export const APP_PORT = readEnv('APP_PORT');
 export const CLIENT_HOST = readEnv('CLIENT_HOST');
 export const DB_CONNECTION_STRING = readEnv('DB_CONNECTION_STRING');
+export const JWT_SECRET = readEnv('JWT_SECRET');
+export const NODE_ENV = readEnv('NODE_ENV');

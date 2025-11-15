@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes } from 'react';
+
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
 export default function Button(props: ButtonProps): React.JSX.Element {

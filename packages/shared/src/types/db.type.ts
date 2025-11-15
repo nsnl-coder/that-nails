@@ -11,19 +11,42 @@ type Jsonify<T> = T extends Date
 
 export type JsonSelectable<T> = Jsonify<Selectable<T>>;
 
+export interface UserTable {
+  id: Generated<number>;
+  full_name: string;
+  email: string | null;
+  password: string | null;
+  phone: string;
+  is_phone_verified: Generated<boolean>;
+  is_email_verified: Generated<boolean>;
+  created_at: Generated<Date>;
+  password_updated_at: Date | null;
+}
+
+export interface SalonTable {
+  id: Generated<number>;
+  name: string;
+  address: string;
+  phone: string;
+  email: string;
+  created_at: Generated<Date>;
+}
+
+export interface SalonUserTable {
+  salon_id: number;
+  user_id: number;
+  role: USER_ROLE.OWNER | USER_ROLE.EMPLOYEE;
+  created_at: Generated<Date>;
+}
+
+export interface RootUserTable {
+  user_id: number;
+}
+
 export interface CheckinTable {
   id: Generated<number>;
   phone: string;
   created_at: Date;
-}
-
-export interface UserTable {
-  id: Generated<number>;
-  full_name: string;
-  email?: string;
-  phone: string;
-  created_at: Generated<Date>;
-  role: USER_ROLE;
 }
 
 export interface CategoryTable {
@@ -65,4 +88,6 @@ export interface DB {
   users: UserTable;
   services: ServiceTable;
   categories: CategoryTable;
+  root_users: RootUserTable;
+  salon_users: SalonUserTable;
 }
