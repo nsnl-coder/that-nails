@@ -15,7 +15,8 @@ import TabButton from '../../../core-components/tabs/TabButton';
 import TabContainer from '../../../core-components/tabs/TabContainer';
 import TabPannel from '../../../core-components/tabs/TabPanel';
 import { useUpdateSalonMutation } from '../../../store/salons.api';
-import CreateOwnerForm from './CreateOwnerForm';
+import CreateOwnerForm from './CreateSalonOwnerForm';
+import SalonOwnerList from './SalonOwnerList';
 
 interface Props extends IBaseModal {
   salon: JsonSelectable<SalonTable>;
@@ -42,41 +43,42 @@ export default function UpdateSalonModal(props: Props): React.JSX.Element {
       <Form
         validationSchema={validationSchema.salons.update}
         onSubmit={handleSubmit}
-        className="bg-white w-96 shrink-0 z-20 p-6 space-y-4"
+        className='bg-white shrink-0 z-20 p-6 pt-2 space-y-4 min-w-96'
         defaultValues={props.salon}
       >
         <TabContainer
-          initialTab="update"
-          tabButtonClassName="w-full text-center py-2"
-          activeTabButtonClassName="bg-gray-200"
+          initialTab='owners'
+          tabButtonClassName='w-full text-center py-2 font-bold text-black/40'
+          activeTabButtonClassName='text-blue-400 font-bold'
         >
-          <div className="flex items-center justify-between">
-            <TabButton tabName="update">Update</TabButton>
-            <TabButton tabName="owners">Owners</TabButton>
+          <div className='flex items-center justify-between'>
+            <TabButton tabName='update'>Update</TabButton>
+            <TabButton tabName='owners'>Owners</TabButton>
           </div>
-          <TabPannel tabName="update" className="space-y-4">
+          <TabPannel tabName='update' className='space-y-4'>
             <Input.Group>
               <Input.Container>
-                <Input.Text fieldName="name" placeholder="Salon Name" />
-                <Input.Error fieldName="name" />
+                <Input.Text fieldName='name' placeholder='Salon Name' />
+                <Input.Error fieldName='name' />
               </Input.Container>
               <Input.Container>
-                <Input.Text fieldName="address" placeholder="Salon Address" />
-                <Input.Error fieldName="address" />
+                <Input.Text fieldName='address' placeholder='Salon Address' />
+                <Input.Error fieldName='address' />
               </Input.Container>
               <Input.Container>
-                <Input.Text fieldName="phone" placeholder="Salon Phone" />
-                <Input.Error fieldName="phone" />
+                <Input.Text fieldName='phone' placeholder='Salon Phone' />
+                <Input.Error fieldName='phone' />
               </Input.Container>
               <Input.Container>
-                <Input.Text fieldName="email" placeholder="Salon Email" />
-                <Input.Error fieldName="email" />
+                <Input.Text fieldName='email' placeholder='Salon Email' />
+                <Input.Error fieldName='email' />
               </Input.Container>
             </Input.Group>
-            <Button type="submit">Update Salon</Button>
+            <Button type='submit'>Update Salon</Button>
           </TabPannel>
-          <TabPannel tabName="owners">
-            <Button onClick={openCreateOwnerModal} type="button">
+          <TabPannel tabName='owners' className='space-y-4'>
+            <SalonOwnerList salon={salon} />
+            <Button onClick={openCreateOwnerModal} type='button'>
               Create owner
             </Button>
           </TabPannel>

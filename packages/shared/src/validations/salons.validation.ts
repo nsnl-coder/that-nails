@@ -18,7 +18,6 @@ const createSalonOwner = z.object({
   email_or_phone: z
     .email()
     .or(z.string().length(10, 'Phone number must be 10 digits')),
-  salon_id: z.number().int().positive(),
 });
 
 const salonsValidation = {

@@ -1,6 +1,6 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import type { HttpResponse } from '@thatnails/shared';
-import { API_BASE_URL } from '../config/env.config';
+import { fetchBaseQueryWithCredentials } from '../config/redux.config';
 
 interface GetCheckinsResponse {
   id: number;
@@ -12,7 +12,7 @@ interface GetCheckinsResponse {
 
 export const checkinApi = createApi({
   reducerPath: 'checkinsApi',
-  baseQuery: fetchBaseQuery({ baseUrl: API_BASE_URL }),
+  baseQuery: fetchBaseQueryWithCredentials,
   tagTypes: ['Checkins'],
   endpoints: (builder) => ({
     createCheckin: builder.mutation({

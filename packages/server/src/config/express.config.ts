@@ -14,7 +14,7 @@ declare module 'express' {
   export interface Request {
     user?: Selectable<UserTable>;
     readUser: () => Selectable<UserTable>;
-    readIdParam: () => number;
+    readIdParam: (key?: string) => number;
   }
 }
 
@@ -28,12 +28,12 @@ express.request.readUser = function (): Selectable<UserTable> {
   return user;
 };
 
-express.request.readIdParam = function (): number {
-  const id = this.params.id;
+express.request.readIdParam = function (key: string = 'id'): number {
+  const id = Number(this.params[key]);
 
-  if (!id) {
+  if (isNaN(id)) {
     throw ApiError.APP.INVALID_ID;
   }
 
-  return Number(id);
+  return id;
 };

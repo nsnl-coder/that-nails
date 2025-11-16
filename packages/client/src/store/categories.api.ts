@@ -1,5 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { API_BASE_URL } from '../config/env.config';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import {
   validationSchema,
   type CategoryTable,
@@ -8,10 +7,11 @@ import {
   type ServiceTable,
 } from '@thatnails/shared';
 import type z from 'zod';
+import { fetchBaseQueryWithCredentials } from '../config/redux.config';
 
 export const categoryApi = createApi({
   reducerPath: 'categoryApi',
-  baseQuery: fetchBaseQuery({ baseUrl: API_BASE_URL }),
+  baseQuery: fetchBaseQueryWithCredentials,
   tagTypes: ['Categories', 'Services'],
   endpoints: (builder) => ({
     getCategories: builder.query({

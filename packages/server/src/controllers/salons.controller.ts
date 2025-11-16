@@ -32,14 +32,14 @@ const getSalons = async (req: Request, res: Response) => {
 };
 
 const updateSalon = async (req: Request, res: Response) => {
-  const id = req.readIdParam();
+  const salonId = req.readIdParam('salonId');
   const { name, address, phone, email } =
     await validationSchema.salons.update.parseAsync(req.body);
 
   const salon = await db
     .updateTable('salons')
     .set({ name, address, phone, email })
-    .where('id', '=', id)
+    .where('id', '=', salonId)
     .returningAll()
     .executeTakeFirst();
 
@@ -50,7 +50,8 @@ const updateSalon = async (req: Request, res: Response) => {
 };
 
 const createSalonOwner = async (req: Request, res: Response) => {
-  const { email_or_phone, salon_id } =
+  const salonId = req.readIdParam('salonId');
+  const { email_or_phone } =
     await validationSchema.salons.createSalonOwner.parseAsync(req.body);
 
   const user = await db
@@ -62,12 +63,13 @@ const createSalonOwner = async (req: Request, res: Response) => {
     .executeTakeFirst();
 
   if (!user) {
-    throw ApiError.AUTH.INVALID_USER_OR_PASSWORD;
+    throw ApiError.USER.NOT_FOUND;
   }
 
   const salonUser = await db
     .insertInto('salon_users')
-    .values({ salon_id, user_id: user.id, role: USER_ROLE.OWNER })
+    .values({ salon_id: salonId, user_id: user.id, role: USER_ROLE.OWNER })
+    .returningAll()
     .executeTakeFirst();
 
   res.status(200).json({
@@ -77,11 +79,18 @@ const createSalonOwner = async (req: Request, res: Response) => {
 };
 
 const getSalonOwners = async (req: Request, res: Response) => {
-  const salon_id = req.readIdParam();
+  const salonId = req.readIdParam('salonId');
   const owners = await db
     .selectFrom('salon_users')
-    .selectAll()
-    .where('salon_id', '=', salon_id)
+    .innerJoin('users', 'salon_users.user_id', 'users.id')
+    .select([
+      'users.id',
+      'users.full_name',
+      'users.email',
+      'users.phone',
+      'salon_users.created_at as assigned_at',
+    ])
+    .where('salon_id', '=', salonId)
     .execute();
 
   res.status(200).json({
@@ -90,12 +99,26 @@ const getSalonOwners = async (req: Request, res: Response) => {
   });
 };
 
+const deleteSalonOwner = async (req: Request, res: Response) => {
+  const salonId = req.readIdParam('salonId');
+  const userId = req.readIdParam('userId');
+
+  await db
+    .deleteFrom('salon_users')
+    .where('salon_id', '=', salonId)
+    .where('user_id', '=', userId)
+    .execute();
+
+  res.status(200).json({ status: 'success' });
+};
+
 const salonController = {
   createSalon,
   getSalons,
   updateSalon,
   getSalonOwners,
   createSalonOwner,
+  deleteSalonOwner,
 };
 
 export default salonController;
