@@ -11,6 +11,10 @@ const RequireNotLogin = () => {
     return <Navigate to="/root" />;
   }
 
+  if (user) {
+    return <Navigate to="/" />;
+  }
+
   return <Outlet />;
 };
 

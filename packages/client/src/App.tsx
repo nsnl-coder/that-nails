@@ -2,11 +2,13 @@ import { useEffect } from 'react';
 import { Route, Routes } from 'react-router';
 import { USER_ROLE } from '../../shared/dist/esm/enum';
 import { useAppDispatch } from './config/redux.config';
+import ModalContainer from './core-components/modal/ModalContainer';
 import RequireNotLogin from './hoc/RequireNotLogin';
 import RequireRole from './hoc/RequireRole';
 import SignInPage from './pages/auth/SignInPage';
 import SignUpPage from './pages/auth/SignUpPage';
-import RootPageSideBar from './pages/root/RootPageSideBar';
+import RootLayout from './pages/root/RootLayout';
+import SalonListPage from './pages/root/salonListPage/SalonListPage';
 import { useGetCurrentUserQuery } from './store/auth.api';
 import { userSliceActions } from './store/user.slice';
 
@@ -29,16 +31,20 @@ const App = () => {
   }, [currentUser, isSuccess, isError]);
 
   return (
-    <Routes>
-      <Route path="/auth" element={<RequireNotLogin />}>
-        <Route path="sign-in" element={<SignInPage />} />
-        <Route path="sign-up" element={<SignUpPage />} />
-      </Route>
-      <Route path="/root" element={<RequireRole role={USER_ROLE.ROOT} />}>
-        <Route index element={<RootPageSideBar />} />
-      </Route>
+    <div>
+      <Routes>
+        <Route path="/auth" element={<RequireNotLogin />}>
+          <Route path="sign-in" element={<SignInPage />} />
+          <Route path="sign-up" element={<SignUpPage />} />
+        </Route>
+        <Route path="/root" element={<RequireRole role={USER_ROLE.ROOT} />}>
+          <Route element={<RootLayout />}>
+            <Route index element={<div>this is root page</div>} />
+            <Route path="salons" element={<SalonListPage />} />
+          </Route>
+        </Route>
 
-      {/* <Route path="/" element={<RequireLogin />}>
+        {/* <Route path="/" element={<RequireLogin />}>
         <Route element={<RequireRole role={USER_ROLE.CUSTOMER} />}>
           <Route index element={<div>this is customer page</div>} />
         </Route>
@@ -46,13 +52,15 @@ const App = () => {
         <Route element={<RequireRole role={USER_ROLE.OWNER} />}></Route>
       </Route> */}
 
-      {/* <Route path="/categories" element={<CategoryListPage />} />
+        {/* <Route path="/categories" element={<CategoryListPage />} />
       <Route path="/employees" element={<EmployeeListPage />} />
       <Route path="/categories/:id" element={<CategoryListPage />} />
       <RequireRole role={USER_ROLE.OWNER}></RequireRole>
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/checkin" element={<CheckinPage />} /> */}
-    </Routes>
+      </Routes>
+      <ModalContainer />
+    </div>
   );
 };
 

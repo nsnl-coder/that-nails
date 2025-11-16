@@ -89,5 +89,6 @@ export interface DB {
   services: ServiceTable;
   categories: CategoryTable;
   root_users: RootUserTable;
+  salons: SalonTable;
   salon_users: SalonUserTable;
 }
