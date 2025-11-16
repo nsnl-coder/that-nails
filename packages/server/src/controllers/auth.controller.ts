@@ -107,21 +107,38 @@ const getUserRole = async (user_id: number): Promise<USER_ROLE> => {
     .executeTakeFirst();
 
   if (isRootUser) {
-    role = USER_ROLE.ROOT;
+    return USER_ROLE.ROOT;
   }
 
-  if (!isRootUser) {
-    const salonUser = await db
-      .selectFrom('salon_users')
-      .selectAll()
-      .where('user_id', '=', user_id)
-      .executeTakeFirst();
+  const salonUsers = await db
+    .selectFrom('salon_users')
+    .selectAll()
+    .where('user_id', '=', user_id)
+    .execute();
 
-    if (salonUser) {
-      role = salonUser.role;
-    }
+  let employeeRoleCount = 0;
+  let ownerRoleCount = 0;
+
+  const ownerSalonIds = salonUsers
+  .filter((user) => user.role === USER_ROLE.OWNER)
+    .map((user) => user.salon_id);
+
+  const employeeSalonIds = salonUsers
+    .filter((user) => user.role === USER_ROLE.EMPLOYEE)
+    .map((user) => user.salon_id)
+    .filter((salonId) => !ownerSalonIds.includes(salonId));
+
+
+  if (ownerSalonIds.length > 0 && employeeSalonIds.length > 0) {
+    return USER_ROLE.OWNER_PLUS_EMPLOYEE;
   }
-  return role;
+
+  if (employeeSalonIds.length > 0) {
+    return USER_ROLE.MULTI_SALON_EMPLOYEE;
+  }
+  }
+
+  return USER_ROLE.CUSTOMER;
 };
 
 const authController = {

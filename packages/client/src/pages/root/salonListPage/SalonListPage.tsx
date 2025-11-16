@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import type {
   JsonSelectable,
   SalonTable,
@@ -20,27 +21,32 @@ export default function SalonListPage(): React.JSX.Element {
   };
 
   return (
-    <div className="p-8 space-y-8">
+    <div className='p-8 space-y-8'>
       <Button onClick={openCreateSalonModal}>Create salon</Button>
-      <table className="w-full table-auto border-collapse border border-gray-300">
+      <table className='w-full table-auto border-collapse border border-gray-300'>
         <thead>
-          <tr className="bg-gray-100">
-            <th className="p-2 border border-gray-300 text-left">Name</th>
-            <th className="p-2 border border-gray-300 text-left">Address</th>
-            <th className="p-2 border border-gray-300 text-left">Phone</th>
-            <th className="p-2 border border-gray-300 text-left">Email</th>
-            <th className="p-2 border border-gray-300 text-left">Actions</th>
+          <tr className='bg-gray-100'>
+            <th className='p-2 border border-gray-300 text-left'>Name</th>
+            <th className='p-2 border border-gray-300 text-left'>Address</th>
+            <th className='p-2 border border-gray-300 text-left'>Phone</th>
+            <th className='p-2 border border-gray-300 text-left'>Email</th>
+            <th className='p-2 border border-gray-300 text-left'>Actions</th>
           </tr>
         </thead>
         <tbody>
           {salons.map((salon) => (
-            <tr key={salon.id} className="border border-gray-300">
-              <td className="border border-gray-300 p-2">{salon.name}</td>
-              <td className="border border-gray-300 p-2">{salon.address}</td>
-              <td className="border border-gray-300 p-2">{salon.phone}</td>
-              <td className="border border-gray-300 p-2">{salon.email}</td>
-              <td className="border border-gray-300 p-2">
-                <Button onClick={() => openEditSalonModal(salon)}>Edit</Button>
+            <tr key={salon.id} className='border border-gray-300'>
+              <td className='border border-gray-300 p-2'>{salon.name}</td>
+              <td className='border border-gray-300 p-2'>{salon.address}</td>
+              <td className='border border-gray-300 p-2'>{salon.phone}</td>
+              <td className='border border-gray-300 p-2'>{salon.email}</td>
+              <td className='border border-gray-300 p-2'>
+                <div className='flex gap-2'>
+                  <Button onClick={() => openEditSalonModal(salon)}>
+                    Edit
+                  </Button>
+                  <Link to={`/owner/salons/${salon.id}`}>Owner View</Link>
+                </div>
               </td>
             </tr>
           ))}
