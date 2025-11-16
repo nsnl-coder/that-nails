@@ -1,5 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import {
+  USER_ROLE,
   validationSchema,
   type HttpResponse,
   type JsonSelectable,
@@ -8,18 +9,19 @@ import {
 import type z from 'zod';
 import { fetchBaseQueryWithCredentials } from '../config/redux.config';
 
-export interface GetSalonOwnersResponse {
+export interface GetSalonUsersResponse {
   id: number;
   full_name: string;
   email: string;
   phone: string;
+  role: USER_ROLE.OWNER | USER_ROLE.EMPLOYEE;
   assigned_at: string;
 }
 
 export const salonApi = createApi({
   reducerPath: 'salonApi',
   baseQuery: fetchBaseQueryWithCredentials,
-  tagTypes: ['Salons', 'SalonOwners'],
+  tagTypes: ['Salons', 'SalonUsers'],
   endpoints: (builder) => ({
     createSalon: builder.mutation({
       query: (salon: z.infer<typeof validationSchema.salons.create>) => ({
@@ -49,38 +51,38 @@ export const salonApi = createApi({
       }),
       invalidatesTags: ['Salons'],
     }),
-    createSalonOwner: builder.mutation({
+    createSalonUser: builder.mutation({
       query: (
-        data: z.infer<typeof validationSchema.salons.createSalonOwner> & {
+        data: z.infer<typeof validationSchema.salons.createSalonUser> & {
           salonId: number;
         },
       ) => ({
-        url: `/salons/${data.salonId}/owners`,
+        url: `/salons/${data.salonId}/users`,
         method: 'POST',
-        body: { email_or_phone: data.email_or_phone },
+        body: { email_or_phone: data.email_or_phone, role: data.role },
       }),
       invalidatesTags: (_, __, data) => [
-        { type: 'SalonOwners', salonId: data.salonId },
+        { type: 'SalonUsers', salonId: data.salonId },
       ],
     }),
-    getSalonOwners: builder.query({
+    getSalonUsers: builder.query({
       query: (salonId: number) => ({
-        url: `/salons/${salonId}/owners`,
+        url: `/salons/${salonId}/users`,
         method: 'GET',
       }),
-      transformResponse: (response: HttpResponse<GetSalonOwnersResponse[]>) =>
+      transformResponse: (response: HttpResponse<GetSalonUsersResponse[]>) =>
         response.data,
-      providesTags: (_, __, salonId) => [
-        { type: 'SalonOwners', salonId: salonId },
+      providesTags: (result, error, salonId) => [
+        { type: 'SalonUsers', salonId },
       ],
     }),
-    deleteSalonOwner: builder.mutation({
+    deleteSalonUser: builder.mutation({
       query: (data: { salonId: number; userId: number }) => ({
-        url: `/salons/${data.salonId}/owners/${data.userId}`,
+        url: `/salons/${data.salonId}/users/${data.userId}`,
         method: 'DELETE',
       }),
       invalidatesTags: (_, __, data) => [
-        { type: 'SalonOwners', salonId: data.salonId },
+        { type: 'SalonUsers', salonId: data.salonId },
       ],
     }),
   }),
@@ -90,7 +92,7 @@ export const {
   useCreateSalonMutation,
   useGetSalonsQuery,
   useUpdateSalonMutation,
-  useCreateSalonOwnerMutation,
-  useGetSalonOwnersQuery,
-  useDeleteSalonOwnerMutation,
+  useCreateSalonUserMutation,
+  useGetSalonUsersQuery,
+  useDeleteSalonUserMutation,
 } = salonApi;

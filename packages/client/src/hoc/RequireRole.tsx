@@ -9,15 +9,12 @@ interface Props {
 
 export default function RequireRole(props: Props): React.JSX.Element | null {
   const user = useSelector((state: RootState) => state.currrentUser.user);
-  const isRole = user?.role === props.role || user?.role === USER_ROLE.ROOT;
+  const isRootUser = user && user.roleInfo.role === USER_ROLE.ROOT;
+  const isAuthorizedRole = user && user.roleInfo.role === props.role;
 
   if (user === undefined) return <h1>Loading....</h1>;
-  if (user === null) {
-    return <Navigate to='/auth/sign-in' />;
-  }
-  if (!isRole) {
-    return <Navigate to='/' />;
-  }
+  if (user === null) return <Navigate to="/auth/sign-in" />;
+  if (isAuthorizedRole || isRootUser) return <Outlet />;
 
-  return <Outlet />;
+  return <Navigate to="/" />;
 }

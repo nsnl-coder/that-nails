@@ -44,7 +44,7 @@ const signIn = async (req: Request, res: Response) => {
       expiresIn: ms('90d'),
     },
   );
-  const role = await getUserRole(user.id);
+  const roleInfo = await getUserRoleInfo(user.id);
 
   res.cookie(JWT_TOKEN.AUTH, jwtToken, {
     httpOnly: true,
@@ -56,7 +56,7 @@ const signIn = async (req: Request, res: Response) => {
     status: 'success',
     data: {
       ...user,
-      role,
+      roleInfo,
     },
   });
 };
@@ -86,20 +86,24 @@ const signUp = async (req: Request, res: Response) => {
 
 const getCurrentUser = async (req: Request, res: Response) => {
   const user = req.readUser();
-  const role = await getUserRole(user.id);
+  const roleInfo = await getUserRoleInfo(user.id);
 
   res.status(200).json({
     status: 'success',
     data: {
       ...user,
-      role,
+      roleInfo,
     },
   });
 };
 
-const getUserRole = async (user_id: number): Promise<USER_ROLE> => {
-  let role = USER_ROLE.CUSTOMER;
-
+const getUserRoleInfo = async (
+  user_id: number,
+): Promise<{
+  role: USER_ROLE;
+  ownedSalonIds: number[];
+  employedAtSalonIds: number[];
+}> => {
   const isRootUser = await db
     .selectFrom('root_users')
     .selectAll()
@@ -107,7 +111,11 @@ const getUserRole = async (user_id: number): Promise<USER_ROLE> => {
     .executeTakeFirst();
 
   if (isRootUser) {
-    return USER_ROLE.ROOT;
+    return {
+      role: USER_ROLE.ROOT,
+      ownedSalonIds: [],
+      employedAtSalonIds: [],
+    };
   }
 
   const salonUsers = await db
@@ -116,29 +124,46 @@ const getUserRole = async (user_id: number): Promise<USER_ROLE> => {
     .where('user_id', '=', user_id)
     .execute();
 
-  let employeeRoleCount = 0;
-  let ownerRoleCount = 0;
-
   const ownerSalonIds = salonUsers
-  .filter((user) => user.role === USER_ROLE.OWNER)
+    .filter((user) => user.role === USER_ROLE.OWNER)
     .map((user) => user.salon_id);
 
   const employeeSalonIds = salonUsers
     .filter((user) => user.role === USER_ROLE.EMPLOYEE)
     .map((user) => user.salon_id)
-    .filter((salonId) => !ownerSalonIds.includes(salonId));
+    .filter((salonId) => !ownerSalonIds.includes(salonId)); // exclude owned salons
 
+  const isMultpleRole = ownerSalonIds.length > 0 && employeeSalonIds.length > 0;
 
-  if (ownerSalonIds.length > 0 && employeeSalonIds.length > 0) {
-    return USER_ROLE.OWNER_PLUS_EMPLOYEE;
+  if (isMultpleRole) {
+    return {
+      role: USER_ROLE.MULTIPLE_ROLES,
+      ownedSalonIds: ownerSalonIds,
+      employedAtSalonIds: employeeSalonIds,
+    };
+  }
+
+  if (ownerSalonIds.length > 0) {
+    return {
+      role: USER_ROLE.OWNER,
+      ownedSalonIds: ownerSalonIds,
+      employedAtSalonIds: [],
+    };
   }
 
   if (employeeSalonIds.length > 0) {
-    return USER_ROLE.MULTI_SALON_EMPLOYEE;
-  }
+    return {
+      role: USER_ROLE.EMPLOYEE,
+      ownedSalonIds: [],
+      employedAtSalonIds: employeeSalonIds,
+    };
   }
 
-  return USER_ROLE.CUSTOMER;
+  return {
+    role: USER_ROLE.CUSTOMER,
+    ownedSalonIds: [],
+    employedAtSalonIds: [],
+  };
 };
 
 const authController = {

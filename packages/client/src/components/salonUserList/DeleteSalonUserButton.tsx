@@ -1,5 +1,5 @@
-import { useDeleteSalonOwnerMutation } from '../../../store/salons.api';
-import Button from '../../../core-components/button/Button';
+import Button from '../../core-components/button/Button';
+import { useDeleteSalonUserMutation } from '../../store/salons.api';
 
 interface Props {
   salonId: number;
@@ -10,17 +10,17 @@ export default function DeleteSalonOwnerButton(
   props: Props,
 ): React.JSX.Element {
   const { salonId, userId } = props;
-  const [deleteSalonOwner, { isLoading }] = useDeleteSalonOwnerMutation();
+  const [deleteSalonUser, { isLoading }] = useDeleteSalonUserMutation();
 
   const handleDelete = () => {
-    deleteSalonOwner({
+    deleteSalonUser({
       salonId,
       userId,
     });
   };
 
   return (
-    <Button type='button' onClick={handleDelete} disabled={isLoading}>
+    <Button type="button" onClick={handleDelete} disabled={isLoading}>
       Delete
     </Button>
   );

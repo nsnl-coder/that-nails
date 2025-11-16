@@ -1,7 +1,7 @@
+import { USER_ROLE } from '@thatnails/shared';
 import express from 'express';
 import salonController from '../controllers/salons.controller';
 import requireLogin from '../middlewares/requireLogin.middleware';
-import { USER_ROLE } from '@thatnails/shared';
 import requireRole from '../middlewares/requireRole.middleware';
 
 const salonsRouter = express.Router();
@@ -27,25 +27,25 @@ salonsRouter.put(
   salonController.updateSalon,
 );
 
-salonsRouter.post(
-  '/:salonId/owners',
-  requireLogin,
-  requireRole(USER_ROLE.OWNER),
-  salonController.createSalonOwner,
-);
-
 salonsRouter.get(
-  '/:salonId/owners',
+  '/:salonId/users',
   requireLogin,
   requireRole(USER_ROLE.OWNER),
-  salonController.getSalonOwners,
+  salonController.getSalonUsers,
 );
 
 salonsRouter.delete(
-  '/:salonId/owners/:userId',
+  '/:salonId/users/:userId',
   requireLogin,
   requireRole(USER_ROLE.OWNER),
-  salonController.deleteSalonOwner,
+  salonController.deleteSalonUser,
+);
+
+salonsRouter.post(
+  '/:salonId/users',
+  requireLogin,
+  requireRole(USER_ROLE.OWNER),
+  salonController.createSalonUser,
 );
 
 export default salonsRouter;

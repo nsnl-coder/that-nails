@@ -41,7 +41,11 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('created_at', 'timestamp', (c) =>
       c.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
     )
-    .addPrimaryKeyConstraint('salon_users_pkey', ['salon_id', 'user_id'])
+    .addPrimaryKeyConstraint('salon_users_pkey', [
+      'salon_id',
+      'user_id',
+      'role',
+    ])
     .execute();
 
   await db.schema

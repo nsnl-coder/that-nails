@@ -9,7 +9,11 @@ import type z from 'zod';
 import { fetchBaseQueryWithCredentials } from '../config/redux.config';
 
 export interface SignInResponse extends UserTable {
-  role: USER_ROLE;
+  roleInfo: {
+    role: USER_ROLE;
+    ownedSalonIds: number[];
+    employedAtSalonIds: number[];
+  };
 }
 
 export const authApi = createApi({
