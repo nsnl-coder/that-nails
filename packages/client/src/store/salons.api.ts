@@ -1,4 +1,3 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
 import {
   USER_ROLE,
   validationSchema,
@@ -7,7 +6,7 @@ import {
   type SalonTable,
 } from '@thatnails/shared';
 import type z from 'zod';
-import { fetchBaseQueryWithCredentials } from '../config/redux.config';
+import { indexApi } from './index.api';
 
 export interface GetSalonUsersResponse {
   id: number;
@@ -18,10 +17,7 @@ export interface GetSalonUsersResponse {
   assigned_at: string;
 }
 
-export const salonApi = createApi({
-  reducerPath: 'salonApi',
-  baseQuery: fetchBaseQueryWithCredentials,
-  tagTypes: ['Salons', 'SalonUsers'],
+export const salonApi = indexApi.injectEndpoints({
   endpoints: (builder) => ({
     createSalon: builder.mutation({
       query: (salon: z.infer<typeof validationSchema.salons.create>) => ({

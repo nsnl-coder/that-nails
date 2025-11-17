@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { SOCKET_EVENT } from '../../../../shared/dist/esm/enum';
+import { SOCKET_EVENT } from '@thatnails/shared';
 import socket from '../../config/socket.config';
 import { checkinApi, useGetCheckinsQuery } from '../../store/checkins.api';
 import { useDispatch } from 'react-redux';

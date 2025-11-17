@@ -71,6 +71,9 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('created_at', 'timestamp', (c) =>
       c.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
     )
+    .addColumn('salon_id', 'integer', (c) =>
+      c.notNull().references('salons.id'),
+    )
     .addColumn('order', 'serial', (c) => c.notNull())
     .execute();
 
@@ -79,12 +82,17 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('id', 'serial', (c) => c.primaryKey())
     .addColumn('name', 'text', (c) => c.notNull())
     .addColumn('price', 'numeric', (c) => c.notNull())
-    .addColumn('created_at', 'timestamp', (c) =>
-      c.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
+    .addColumn('duration', 'integer', (c) => c.notNull().defaultTo(0))
+
+    .addColumn('category_id', 'integer', (c) =>
+      c.references('categories.id').defaultTo(null),
+    )
+    .addColumn('salon_id', 'integer', (c) =>
+      c.notNull().references('salons.id'),
     )
     .addColumn('order', 'serial', (c) => c.notNull())
-    .addColumn('category_id', 'integer', (c) =>
-      c.notNull().references('categories.id'),
+    .addColumn('created_at', 'timestamp', (c) =>
+      c.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
     )
     .execute();
 }

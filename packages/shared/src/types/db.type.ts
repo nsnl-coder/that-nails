@@ -51,6 +51,7 @@ export interface CheckinTable {
 
 export interface CategoryTable {
   id: Generated<number>;
+  salon_id: number;
   name: string;
   order: Generated<number>;
   created_at: Generated<Date>;
@@ -60,9 +61,10 @@ export interface ServiceTable {
   id: Generated<number>;
   name: string;
   price: number;
+  category_id: number | null;
+  salon_id: number;
   order: Generated<number>;
   duration: Generated<number>;
-  category_id: number;
   created_at: Generated<Date>;
 }
 

@@ -1,4 +1,3 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
 import type {
   HttpResponse,
   USER_ROLE,
@@ -6,7 +5,7 @@ import type {
   validationSchema,
 } from '@thatnails/shared';
 import type z from 'zod';
-import { fetchBaseQueryWithCredentials } from '../config/redux.config';
+import { indexApi } from './index.api';
 
 export interface SignInResponse extends UserTable {
   roleInfo: {
@@ -16,9 +15,7 @@ export interface SignInResponse extends UserTable {
   };
 }
 
-export const authApi = createApi({
-  reducerPath: 'authApi',
-  baseQuery: fetchBaseQueryWithCredentials,
+export const authApi = indexApi.injectEndpoints({
   endpoints: (builder) => ({
     signIn: builder.mutation({
       query: (data: z.infer<typeof validationSchema.auth.signIn>) => ({

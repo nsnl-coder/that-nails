@@ -1,4 +1,3 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
 import {
   validationSchema,
   type CategoryTable,
@@ -7,57 +6,48 @@ import {
   type ServiceTable,
 } from '@thatnails/shared';
 import type z from 'zod';
-import { fetchBaseQueryWithCredentials } from '../config/redux.config';
+import { indexApi } from './index.api';
 
-export const categoryApi = createApi({
-  reducerPath: 'categoryApi',
-  baseQuery: fetchBaseQueryWithCredentials,
-  tagTypes: ['Categories', 'Services'],
+export const categoryApi = indexApi.injectEndpoints({
   endpoints: (builder) => ({
     getCategories: builder.query({
-      query: () => ({
-        url: '/categories',
+      query: (salonId: number) => ({
+        url: `/salons/${salonId}/categories`,
         method: 'GET',
       }),
       transformResponse: (
         response: HttpResponse<JsonSelectable<CategoryTable>[]>,
       ) => response.data,
-      providesTags: ['Categories'],
+      providesTags: (_, __, salonId) => [
+        { type: 'Categories', salonId: salonId },
+      ],
     }),
     createCategory: builder.mutation({
       query: (
-        data: z.infer<typeof validationSchema.categories.createCategory>,
+        data: z.infer<typeof validationSchema.categories.createCategory> & {
+          salonId: number;
+        },
       ) => ({
-        url: '/categories',
+        url: `/salons/${data.salonId}/categories`,
         method: 'POST',
         body: data,
       }),
       invalidatesTags: ['Categories'],
     }),
     getCategoryServices: builder.query({
-      query: (categoryId: number) => ({
-        url: `/categories/${categoryId}/services`,
+      query: (data: { categoryId: number; salonId: number }) => ({
+        url: `/salons/${data.salonId}/categories/${data.categoryId}/services`,
         method: 'GET',
       }),
       transformResponse: (
         response: HttpResponse<JsonSelectable<ServiceTable>[]>,
       ) => response.data,
-      providesTags: (_, __, categoryId) => [
-        { type: 'Services', categoryId: categoryId },
-      ],
-    }),
-    createService: builder.mutation({
-      query: (
-        data: z.infer<typeof validationSchema.categories.createService> & {
-          categoryId: number;
+      providesTags: (_, __, data) => [
+        {
+          type: 'Services',
+          categoryId: data.categoryId || 'null',
+          salonId: data.salonId,
         },
-      ) => ({
-        url: `/categories/${data.categoryId}/services`,
-        method: 'POST',
-        body: data,
-      }),
-      invalidatesTags: (_, __, categoryId) => [
-        { type: 'Services', categoryId: categoryId },
       ],
     }),
   }),
@@ -67,5 +57,4 @@ export const {
   useGetCategoriesQuery,
   useCreateCategoryMutation,
   useGetCategoryServicesQuery,
-  useCreateServiceMutation,
 } = categoryApi;

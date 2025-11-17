@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { Route, Routes } from 'react-router';
-import { USER_ROLE } from '../../shared/dist/esm/enum';
 import { useAppDispatch } from './config/redux.config';
 import ModalContainer from './core-components/modal/ModalContainer';
 import RequireNotLogin from './hoc/RequireNotLogin';
@@ -13,6 +12,9 @@ import RootLayout from './pages/root/RootLayout';
 import SalonListPage from './pages/root/salonListPage/SalonListPage';
 import { useGetCurrentUserQuery } from './store/auth.api';
 import { userSliceActions } from './store/user.slice';
+import { USER_ROLE } from '@thatnails/shared';
+import CategoryServicePageLayout from './pages/owner/salonServicePage/CategoryServicePageLayout';
+import CategoryServicesPage from './pages/owner/salonServicePage/CategoryServicesPage';
 
 const App = () => {
   const {
@@ -35,23 +37,27 @@ const App = () => {
   return (
     <div>
       <Routes>
-        <Route path="/auth" element={<RequireNotLogin />}>
-          <Route path="sign-in" element={<SignInPage />} />
-          <Route path="sign-up" element={<SignUpPage />} />
+        <Route path='/auth' element={<RequireNotLogin />}>
+          <Route path='sign-in' element={<SignInPage />} />
+          <Route path='sign-up' element={<SignUpPage />} />
         </Route>
-        <Route path="/root" element={<RequireRole role={USER_ROLE.ROOT} />}>
+        <Route path='/root' element={<RequireRole role={USER_ROLE.ROOT} />}>
           <Route element={<RootLayout />}>
             <Route index element={<div>this is root page</div>} />
-            <Route path="salons" element={<SalonListPage />} />
+            <Route path='salons' element={<SalonListPage />} />
           </Route>
         </Route>
         <Route
-          path="/owner/salons/:salonId"
+          path='/owner/salons/:salonId'
           element={<RequireRole role={USER_ROLE.OWNER} />}
         >
           <Route element={<OwnerLayout />}>
             <Route index element={<div>this is owner salon page</div>} />
-            <Route path="users" element={<SalonUserListPage />} />
+            <Route path='users' element={<SalonUserListPage />} />
+            <Route path='categories' element={<CategoryServicePageLayout />}>
+              <Route index element={<CategoryServicesPage />} />
+              <Route path=':categoryId' element={<CategoryServicesPage />} />
+            </Route>
           </Route>
         </Route>
 

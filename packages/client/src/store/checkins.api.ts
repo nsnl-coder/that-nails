@@ -1,6 +1,5 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
 import type { HttpResponse } from '@thatnails/shared';
-import { fetchBaseQueryWithCredentials } from '../config/redux.config';
+import { indexApi } from './index.api';
 
 interface GetCheckinsResponse {
   id: number;
@@ -10,10 +9,7 @@ interface GetCheckinsResponse {
   email: string;
 }
 
-export const checkinApi = createApi({
-  reducerPath: 'checkinsApi',
-  baseQuery: fetchBaseQueryWithCredentials,
-  tagTypes: ['Checkins'],
+export const checkinApi = indexApi.injectEndpoints({
   endpoints: (builder) => ({
     createCheckin: builder.mutation({
       query: (checkin) => ({
@@ -30,7 +26,6 @@ export const checkinApi = createApi({
       transformResponse: (
         response: HttpResponse<GetCheckinsResponse[]>,
       ): GetCheckinsResponse[] => response.data,
-      providesTags: ['Checkins'],
     }),
   }),
 });
