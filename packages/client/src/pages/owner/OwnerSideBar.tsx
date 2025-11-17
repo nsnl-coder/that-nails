@@ -9,6 +9,7 @@ export default function OwnerSideBar(): React.JSX.Element {
       <Link to={`/owner/salons/${salonId}`}>Salon</Link>
       <Link to={`/owner/salons/${salonId}/users`}>Users</Link>
       <Link to={`/owner/salons/${salonId}/categories`}>Services</Link>
+      <Link to={`/owner/salons/${salonId}/bookings`}>Bookings</Link>
     </div>
   );
 }

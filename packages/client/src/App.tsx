@@ -15,6 +15,7 @@ import { userSliceActions } from './store/user.slice';
 import { USER_ROLE } from '@thatnails/shared';
 import CategoryServicePageLayout from './pages/owner/salonServicePage/CategoryServicePageLayout';
 import CategoryServicesPage from './pages/owner/salonServicePage/CategoryServicesPage';
+import BookingListPage from './pages/owner/bookingListPage/BookingListPage';
 
 const App = () => {
   const {
@@ -58,6 +59,7 @@ const App = () => {
               <Route index element={<CategoryServicesPage />} />
               <Route path=':categoryId' element={<CategoryServicesPage />} />
             </Route>
+            <Route path='bookings' element={<BookingListPage />} />
           </Route>
         </Route>
 
