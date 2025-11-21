@@ -4,16 +4,22 @@ export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('users')
     .addColumn('id', 'serial', (c) => c.primaryKey())
-    .addColumn('full_name', 'text', (c) => c.notNull())
+    .addColumn('full_name', 'text')
     .addColumn('email', 'text', (c) => c.unique())
     .addColumn('phone', 'text', (c) => c.notNull().unique())
-    .addColumn('password', 'text', (c) => c.notNull())
-    .addColumn('is_phone_verified', 'boolean', (c) =>
-      c.notNull().defaultTo(false),
+    .addColumn('password', 'text')
+    .addColumn('created_at', 'timestamp', (c) =>
+      c.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
     )
-    .addColumn('is_email_verified', 'boolean', (c) =>
-      c.notNull().defaultTo(false),
-    )
+    .execute();
+
+  await db.schema
+    .createTable('tokens')
+    .addColumn('id', 'serial', (c) => c.primaryKey())
+    .addColumn('user_id', 'integer', (c) => c.notNull().references('users.id'))
+    .addColumn('emailOrPhone', 'text', (c) => c.notNull())
+    .addColumn('token', 'text', (c) => c.notNull())
+    .addColumn('expires_at', 'timestamp', (c) => c.notNull())
     .addColumn('created_at', 'timestamp', (c) =>
       c.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
     )
@@ -91,6 +97,23 @@ export async function up(db: Kysely<any>): Promise<void> {
       c.notNull().references('salons.id'),
     )
     .addColumn('order', 'serial', (c) => c.notNull())
+    .addColumn('created_at', 'timestamp', (c) =>
+      c.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
+    )
+    .execute();
+
+  await db.schema
+    .createTable('appointments')
+    .addColumn('id', 'serial', (c) => c.primaryKey())
+    .addColumn('customer_id', 'integer', (c) =>
+      c.notNull().references('users.id'),
+    )
+    .addColumn('salon_id', 'integer', (c) =>
+      c.notNull().references('salons.id'),
+    )
+    .addColumn('guests', 'jsonb', (c) => c.notNull().defaultTo('[]'))
+    .addColumn('status', 'text', (c) => c.notNull())
+    .addColumn('appointment_date', 'timestamp', (c) => c.notNull())
     .addColumn('created_at', 'timestamp', (c) =>
       c.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
     )

@@ -23,6 +23,15 @@ export interface UserTable {
   password_updated_at: Date | null;
 }
 
+export interface TokenTable {
+  id: Generated<number>;
+  user_id: Generated<number>;
+  emailOrPhone: string;
+  token: string;
+  expires_at: Date;
+  created_at: Generated<Date>;
+}
+
 export interface SalonTable {
   id: Generated<number>;
   name: string;
@@ -75,31 +84,24 @@ export interface AppointmentTable {
   status: APPOINTMENT_STATUS;
   appointment_date: Date;
   created_at: Generated<Date>;
-}
-
-export interface GuestTable {
-  id: Generated<number>;
-  appointment_id: number;
-  technician_id: number | null;
-}
-
-export interface GuestServiceTable {
-  id: Generated<number>;
-  guest_id: number;
-  service_id: number;
-  duration: Generated<number>;
-  price: number;
+  guests: {
+    technician_id: number;
+    services: {
+      service_name: string;
+      service_id: number;
+      duration: number;
+      price: number;
+    }[];
+  }[];
 }
 
 export interface DB {
   checkins: CheckinTable;
   users: UserTable;
+  root_users: RootUserTable;
+  salon_users: SalonUserTable;
   services: ServiceTable;
   categories: CategoryTable;
-  root_users: RootUserTable;
   salons: SalonTable;
-  salon_users: SalonUserTable;
   appointments: AppointmentTable;
-  guests: GuestTable;
-  guest_service: GuestServiceTable;
 }

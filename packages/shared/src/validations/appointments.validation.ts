@@ -10,15 +10,7 @@ const createAppointment = z.object({
       z.object({
         technician_id: z.number(),
         services: z
-          .array(
-            z.object({
-              service_id: z.number(),
-              duration: z.coerce
-                .number()
-                .min(0, 'Duration must be greater than 0'),
-              price: z.coerce.number().min(0, 'Price must be greater than 0'),
-            }),
-          )
+          .array(z.number())
           .min(1, 'At least one service is required'),
       }),
     )
