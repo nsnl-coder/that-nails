@@ -10,6 +10,7 @@ export const indexApi = createApi({
     'CategoryServices',
     'Salons',
     'SalonUsers',
+    'Appointments',
   ],
   endpoints: () => ({}),
 });

@@ -13,4 +13,6 @@ serviceRouter.post(
   serviceController.createService,
 );
 
+serviceRouter.get('/', serviceController.getServices);
+
 export default serviceRouter;

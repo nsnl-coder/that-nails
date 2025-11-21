@@ -61,8 +61,8 @@ export interface ServiceTable {
   id: Generated<number>;
   name: string;
   price: number;
-  category_id: number | null;
   salon_id: number;
+  category_id: number | null;
   order: Generated<number>;
   duration: Generated<number>;
   created_at: Generated<Date>;
@@ -70,19 +70,25 @@ export interface ServiceTable {
 
 export interface AppointmentTable {
   id: Generated<number>;
-  user_id: number;
-  service_id: number;
+  customer_id: number;
+  salon_id: number;
   status: APPOINTMENT_STATUS;
   appointment_date: Date;
   created_at: Generated<Date>;
 }
 
-export interface AppointmentServiceTable {
+export interface GuestTable {
   id: Generated<number>;
   appointment_id: number;
+  technician_id: number | null;
+}
+
+export interface GuestServiceTable {
+  id: Generated<number>;
+  guest_id: number;
   service_id: number;
-  created_at: Generated<Date>;
   duration: Generated<number>;
+  price: number;
 }
 
 export interface DB {
@@ -93,4 +99,7 @@ export interface DB {
   root_users: RootUserTable;
   salons: SalonTable;
   salon_users: SalonUserTable;
+  appointments: AppointmentTable;
+  guests: GuestTable;
+  guest_service: GuestServiceTable;
 }

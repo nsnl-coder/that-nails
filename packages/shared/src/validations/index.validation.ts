@@ -1,3 +1,4 @@
+import appointmentsValidation from './appointments.validation';
 import authValidation from './auth.validation';
 import categoriesValidation from './categories.validation';
 import checkinsValidation from './checkins.validation';
@@ -12,4 +13,5 @@ export const validationSchema = {
   auth: authValidation,
   salons: salonsValidation,
   services: servicesValidation,
+  appointments: appointmentsValidation,
 };

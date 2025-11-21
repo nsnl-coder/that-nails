@@ -30,7 +30,16 @@ const getServices = async (req: Request, res: Response) => {
 
   const services = await db
     .selectFrom('services')
-    .where('salon_id', '=', salonId)
+    .innerJoin('categories', 'services.category_id', 'categories.id')
+    .select([
+      'services.id',
+      'services.name',
+      'services.price',
+      'services.duration',
+      'categories.name as category_name',
+      'categories.id as category_id',
+    ])
+    .where('services.salon_id', '=', salonId)
     .execute();
 
   res.status(200).json({

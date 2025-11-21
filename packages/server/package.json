@@ -10,6 +10,7 @@
     "dev": "ts-node-dev  src/index.ts"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.1.0",
     "@thatnails/shared": "1.0.0",
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.10",
